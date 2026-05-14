@@ -1,0 +1,830 @@
+
+<style>
+  :root {
+    --c1: #1a1a2e;
+    --c2: #16213e;
+    --accent: #0f3460;
+    --highlight: #e94560;
+    --gold: #f5a623;
+    --mint: #00b4d8;
+    --text: var(--color-text-primary);
+    --sub: var(--color-text-secondary);
+    --bg: var(--color-background-primary);
+    --bg2: var(--color-background-secondary);
+    --bdr: var(--color-border-tertiary);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  
+  .hero { border-left: 4px solid var(--highlight); padding: 1rem 1.5rem; background: var(--bg2); border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0; margin-bottom: 2.5rem; }
+  .hero h1 { font-size: 22px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .hero p { font-size: 14px; color: var(--sub); }
+  
+  .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sub); margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--bdr); }
+  
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .tab-btn { font-size: 13px; padding: 6px 14px; border: 0.5px solid var(--bdr); border-radius: 20px; background: var(--bg); color: var(--sub); cursor: pointer; transition: all 0.15s; }
+  .tab-btn.active { background: var(--highlight); color: #fff; border-color: var(--highlight); }
+  .tab-btn:hover:not(.active) { background: var(--bg2); color: var(--text); }
+  
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  
+  .comp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .comp-card { background: var(--bg); border: 0.5px solid var(--bdr); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; position: relative; }
+  .comp-card.top-site { border-color: var(--gold); border-width: 1.5px; }
+  .comp-top-badge { position: absolute; top: -10px; right: 14px; background: var(--gold); color: #4a2e00; font-size: 10px; font-weight: 500; padding: 2px 10px; border-radius: 20px; }
+  .comp-name { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .comp-url { font-size: 11px; color: var(--sub); margin-bottom: 10px; }
+  .comp-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; margin: 0 3px 4px 0; }
+  .tag-creatio { background: #e6f1fb; color: #185fa5; }
+  .tag-ms { background: #eaf3de; color: #3b6d11; }
+  .tag-multi { background: #fbeaf0; color: #993556; }
+  .tag-bpm { background: #eeedfe; color: #534ab7; }
+  .tag-smb { background: #faeeda; color: #854f0b; }
+  .tag-enterprise { background: #e1f5ee; color: #0f6e56; }
+  .prop-list { list-style: none; margin-top: 10px; }
+  .prop-list li { font-size: 13px; color: var(--sub); padding: 4px 0; border-bottom: 0.5px solid var(--bdr); display: flex; gap: 8px; }
+  .prop-list li:last-child { border-bottom: none; }
+  .prop-key { font-weight: 500; color: var(--text); min-width: 90px; flex-shrink: 0; }
+  .strength-bar { display: flex; gap: 4px; margin-top: 8px; align-items: center; }
+  .strength-label { font-size: 11px; color: var(--sub); min-width: 50px; }
+  .bars { display: flex; gap: 3px; }
+  .bar { width: 16px; height: 8px; border-radius: 2px; background: var(--bg2); }
+  .bar.filled { background: var(--highlight); }
+  .bar.gold { background: var(--gold); }
+  
+  .sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .sw-block { background: var(--bg2); border-radius: var(--border-radius-md); padding: 10px 12px; }
+  .sw-block h4 { font-size: 11px; font-weight: 500; margin-bottom: 6px; }
+  .sw-block.s h4 { color: #3b6d11; }
+  .sw-block.w h4 { color: #a32d2d; }
+  .sw-block ul { list-style: none; }
+  .sw-block ul li { font-size: 12px; color: var(--sub); padding: 2px 0; }
+  .sw-block ul li::before { content: '·  '; }
+  
+  .trends-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .trend-card { background: var(--bg); border: 0.5px solid var(--bdr); border-radius: var(--border-radius-lg); padding: 1rem; }
+  .trend-icon { font-size: 22px; margin-bottom: 8px; }
+  .trend-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .trend-items { list-style: none; }
+  .trend-items li { font-size: 12px; color: var(--sub); padding: 3px 0; border-bottom: 0.5px solid var(--bdr); }
+  .trend-items li:last-child { border-bottom: none; }
+  .trend-pct { display: inline-block; min-width: 32px; font-size: 11px; color: var(--highlight); font-weight: 500; }
+
+  .rec-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .rec-card { background: var(--bg); border: 0.5px solid var(--bdr); border-radius: var(--border-radius-lg); padding: 1.25rem; border-left: 3px solid var(--mint); }
+  .rec-num { font-size: 11px; font-weight: 500; color: var(--mint); margin-bottom: 4px; }
+  .rec-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+  .rec-body { font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .rec-card.highlight { border-left-color: var(--highlight); }
+  .rec-card.highlight .rec-num { color: var(--highlight); }
+  .rec-card.gold-border { border-left-color: var(--gold); }
+  .rec-card.gold-border .rec-num { color: var(--gold); }
+
+  .site-map { display: flex; flex-direction: column; gap: 16px; }
+  .page-block { background: var(--bg); border: 0.5px solid var(--bdr); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .page-header { background: var(--bg2); padding: 10px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .page-header h3 { font-size: 14px; font-weight: 500; color: var(--text); }
+  .page-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; }
+  .badge-main { background: #e6f1fb; color: #185fa5; }
+  .badge-service { background: #e1f5ee; color: #0f6e56; }
+  .badge-case { background: #faeeda; color: #854f0b; }
+  .badge-cta { background: #faece7; color: #993c1d; }
+  .badge-other { background: #eeedfe; color: #534ab7; }
+  .page-body { padding: 0 16px; }
+  .page-body.open { padding: 12px 16px; }
+  .block-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+  .block-item { background: var(--bg2); border-radius: var(--border-radius-md); padding: 8px 12px; }
+  .block-item-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .block-item-desc { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .cta-logic { background: var(--bg2); border-radius: var(--border-radius-md); padding: 12px 16px; margin-top: 12px; }
+  .cta-logic h4 { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .cta-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .cta-step { font-size: 12px; background: var(--bg); border: 0.5px solid var(--bdr); border-radius: var(--border-radius-md); padding: 4px 10px; color: var(--sub); }
+  .cta-arrow { font-size: 14px; color: var(--sub); }
+
+  .top5-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .top5-card { background: var(--bg); border: 0.5px solid var(--bdr); border-radius: var(--border-radius-lg); padding: 1.25rem; position: relative; }
+  .top5-rank { position: absolute; top: 12px; right: 14px; font-size: 28px; font-weight: 500; color: var(--bg2); }
+  .top5-name { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .top5-why { font-size: 12px; color: var(--sub); margin: 8px 0 10px; line-height: 1.6; }
+  .score-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .score-label { font-size: 11px; color: var(--sub); min-width: 70px; }
+  .score-track { flex: 1; height: 6px; background: var(--bg2); border-radius: 3px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; background: var(--highlight); }
+  .score-fill.gold { background: var(--gold); }
+  .score-fill.mint { background: var(--mint); }
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Аналіз конкурентів MasterCRM — Creatio інтегратори</h1>
+    <p>Прямі та непрямі конкуренти · Тренди ринку · Рекомендації · Структура сайту</p>
+  </div>
+
+  <div class="tabs" id="main-tabs">
+    <button class="tab-btn active" onclick="switchTab('direct')">Прямі конкуренти</button>
+    <button class="tab-btn" onclick="switchTab('indirect')">Непрямі конкуренти</button>
+    <button class="tab-btn" onclick="switchTab('top5')">ТОП-5 сайтів</button>
+    <button class="tab-btn" onclick="switchTab('trends')">Тренди ринку</button>
+    <button class="tab-btn" onclick="switchTab('recs')">Рекомендації</button>
+    <button class="tab-btn" onclick="switchTab('sitemap')">Структура сайту</button>
+  </div>
+
+  <div id="tab-direct" class="tab-panel active">
+    <p class="section-title">7 прямих конкурентів — Creatio партнери</p>
+    <div class="comp-grid">
+
+      <div class="comp-card top-site">
+        <div class="comp-top-badge">ТОП сайт</div>
+        <div class="comp-name">Banza IT</div>
+        <div class="comp-url">banzait.com</div>
+        <span class="comp-tag tag-creatio">Creatio Level 5</span>
+        <span class="comp-tag tag-enterprise">Enterprise</span>
+        <span class="comp-tag tag-bpm">BPM/AI</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Лідер no-code BPM/CRM + AI-агенти для enterprise</li>
+          <li><span class="prop-key">Послуги</span>CRM, BPM, e-портали, чат-боти, AI-workforce, програми лояльності</li>
+          <li><span class="prop-key">Акцент</span>«TOP partner Creatio», 9 років, 200+ клієнтів, 150+ спеціалістів</li>
+          <li><span class="prop-key">Продаж</span>Кейси (Ukrtelecom, Astana Motors), галузеві рішення, R&D центр</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Сучасний дизайн сайту</li><li>Сильний соціальний доказ</li><li>AI / no-code наратив</li><li>Галузева глибина</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Фокус на корпоратах</li><li>Мало цін/прозорості</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">Sales'Up</div>
+        <div class="comp-url">salesup-it.com</div>
+        <span class="comp-tag tag-creatio">Creatio</span>
+        <span class="comp-tag tag-enterprise">FMCG/Agro</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Full-cycle інтегратор з готовими галузевими рішеннями</li>
+          <li><span class="prop-key">Послуги</span>FMCG, Agro, фінанси, планування, trade marketing, аналітика</li>
+          <li><span class="prop-key">Акцент</span>8+ років, готові продукти (FMCG Management, Data Management)</li>
+          <li><span class="prop-key">Продаж</span>Готові продуктові рішення, не просто впровадження</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Нішева спеціалізація</li><li>Готові продукти</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Вузька аудиторія</li><li>Сайт дещо застарілий</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card top-site">
+        <div class="comp-top-badge">ТОП сайт</div>
+        <div class="comp-name">QubeSoft</div>
+        <div class="comp-url">qube-soft.com</div>
+        <span class="comp-tag tag-creatio">Creatio</span>
+        <span class="comp-tag tag-smb">SMB фокус</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Провідний Creatio-інтегратор для SMB за доступними цінами</li>
+          <li><span class="prop-key">Послуги</span>Turnkey впровадження, підтримка, навчання CRM-менеджера, готові коннектори</li>
+          <li><span class="prop-key">Акцент</span>450+ проектів, прозорий прайс, технічна документація, автономність клієнта</li>
+          <li><span class="prop-key">Продаж</span>Фіксовані ціни, перелік послуг, кейси, прозорість</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Чіткий прайс</li><li>Унікальна послуга підбору CRM-менеджера</li><li>Гарний сайт</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Малий enterprise досвід</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">CRM Genesis</div>
+        <div class="comp-url">crmgenesis.com</div>
+        <span class="comp-tag tag-creatio">Creatio</span>
+        <span class="comp-tag tag-enterprise">Виробництво</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Creatio впровадження для виробничих та комерційних процесів</li>
+          <li><span class="prop-key">Послуги</span>Впровадження Creatio, навчання, технічна підтримка, блог</li>
+          <li><span class="prop-key">Акцент</span>Автоматизація даних, маркетингу та продажів великих компаній</li>
+          <li><span class="prop-key">Продаж</span>Блог + SEO, навчальні матеріали</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Сильний SEO-блог</li><li>Навчання як послуга</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Сайт на JS — погана індексація</li><li>Мало кейсів</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">CRMiUM</div>
+        <div class="comp-url">crmium.com/uk</div>
+        <span class="comp-tag tag-multi">Мультивендор</span>
+        <span class="comp-tag tag-creatio">Creatio</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Перший мультисистемний інтегратор — не нав'язує одну CRM</li>
+          <li><span class="prop-key">Послуги</span>Zoho, Odoo, Creatio, NetHunt, Pipedrive, KeyCRM — повний спектр</li>
+          <li><span class="prop-key">Акцент</span>300+ впроваджень, 15 років з Creatio, 50+ CRM-експертів</li>
+          <li><span class="prop-key">Продаж</span>«Підбираємо оптимальне рішення», не тиснемо на один продукт</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Унікальне позиціонування</li><li>Широкий вибір систем</li><li>Довіра клієнтів</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Розмите позиціонування</li><li>Застарілий сайт</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">CRM HUB</div>
+        <div class="comp-url">crmhub.com.ua</div>
+        <span class="comp-tag tag-creatio">Creatio</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Надійний Creatio-інтегратор з акцентом на довгострокове партнерство</li>
+          <li><span class="prop-key">Послуги</span>CRM Creatio — впровадження, інтеграції, підтримка 24/7</li>
+          <li><span class="prop-key">Акцент</span>Відгуки клієнтів, 24/7 підтримка, виконання в строк</li>
+          <li><span class="prop-key">Продаж</span>Відгуки великих клієнтів (DCH, ALFA Smart Agro, Mathema)</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Сильні відгуки</li><li>24/7 підтримка</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Мало контенту</li><li>Сайт застарілий, простий</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">Consimple</div>
+        <div class="comp-url">consimple.com</div>
+        <span class="comp-tag tag-creatio">Creatio</span>
+        <span class="comp-tag tag-smb">Ритейл/Медицина</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Creatio-партнер з нішею в ритейлі, медицині, рекрутингу</li>
+          <li><span class="prop-key">Послуги</span>Впровадження CRM, автоматизація продажів та рекрутингу</li>
+          <li><span class="prop-key">Акцент</span>Спеціалізовані рішення для конкретних сфер</li>
+          <li><span class="prop-key">Продаж</span>Нішеве позиціонування</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Чітка ніша</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Слабкий сайт</li><li>Мало відгуків</li><li>Мала команда</li></ul></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="tab-indirect" class="tab-panel">
+    <p class="section-title">Непрямі конкуренти — CRM/ERP/BPM інтегратори (10 відібраних)</p>
+    <div class="comp-grid">
+
+      <div class="comp-card top-site">
+        <div class="comp-top-badge">ТОП сайт</div>
+        <div class="comp-name">SMART business</div>
+        <div class="comp-url">smart-it.com</div>
+        <span class="comp-tag tag-ms">Microsoft Dynamics</span>
+        <span class="comp-tag tag-enterprise">Enterprise</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Провідний Microsoft-партнер: ERP, CRM, HRM, BPM, AI — 60+ країн</li>
+          <li><span class="prop-key">Послуги</span>Microsoft Dynamics 365, Power Platform, хмарні рішення, AI</li>
+          <li><span class="prop-key">Акцент</span>15 років, власні рішення, digital transformation, AI-аналітика</li>
+          <li><span class="prop-key">Продаж</span>Сучасний сайт, галузеві рішення, сильний бренд, кейси</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Найсильніший сайт ринку</li><li>Глобальна присутність</li><li>AI + Power Platform</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Дорого для SMB</li><li>Не Creatio-фокус</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card top-site">
+        <div class="comp-top-badge">ТОП сайт</div>
+        <div class="comp-name">Innoware</div>
+        <div class="comp-url">innoware.com</div>
+        <span class="comp-tag tag-ms">Microsoft Dynamics</span>
+        <span class="comp-tag tag-enterprise">Enterprise</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>20+ років Microsoft Dynamics — ERP + CRM для великих підприємств</li>
+          <li><span class="prop-key">Послуги</span>Dynamics 365 (ERP, CRM, HR), Azure, Power Platform, міграція з 1С</li>
+          <li><span class="prop-key">Акцент</span>500+ проектів, 18 країн, власна методологія впровадження</li>
+          <li><span class="prop-key">Продаж</span>Клієнти (Kernel, Obolon, MetInvest), міграція з рос. ПЗ</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Авторитет + кейси</li><li>Сучасний сайт</li><li>Міграційний наратив</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Тільки великий бізнес</li><li>MS-платформа, не Creatio</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">CRMiUM (непряма роль)</div>
+        <div class="comp-url">crmium.com/uk</div>
+        <span class="comp-tag tag-multi">Мультивендор</span>
+        <span class="comp-tag tag-smb">SMB/Mid</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Вже у прямих. Тут — як мультивендор-конкурент по SMB</li>
+          <li><span class="prop-key">Послуги</span>Zoho, Pipedrive, KeyCRM, Odoo — конкурує за клієнтів без Creatio</li>
+          <li><span class="prop-key">Акцент</span>«Не нав'язуємо систему» — сильний аргумент проти Creatio-фокусу</li>
+          <li><span class="prop-key">Продаж</span>Кваліфікація та підбір CRM як послуга</li>
+        </ul>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">Rubicon</div>
+        <div class="comp-url">rubicon.ltd</div>
+        <span class="comp-tag tag-bpm">BPM</span>
+        <span class="comp-tag tag-enterprise">Mid/Enterprise</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Комплексна автоматизація бізнесу та цифрова трансформація</li>
+          <li><span class="prop-key">Послуги</span>CRM, BPM, ERP, автоматизація HR та операцій</li>
+          <li><span class="prop-key">Акцент</span>Широкий спектр послуг, консалтинг + впровадження</li>
+          <li><span class="prop-key">Продаж</span>Консультаційний підхід, індивідуальний вибір системи</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Широкий спектр</li><li>Консалтинг</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Нечітке позиціонування</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">SMART CRM Market</div>
+        <div class="comp-url">scm.weblium.site</div>
+        <span class="comp-tag tag-smb">SMB</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Спрощене CRM-впровадження для малого бізнесу</li>
+          <li><span class="prop-key">Послуги</span>Базове впровадження CRM, інтеграції, підтримка</li>
+          <li><span class="prop-key">Акцент</span>Доступно, швидко, просто</li>
+          <li><span class="prop-key">Продаж</span>Landing page, низький поріг входу</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Простота входу</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Сайт-однострінка Weblium</li><li>Мало авторитету</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">Ontargt IT</div>
+        <div class="comp-url">ontargit.com/ua</div>
+        <span class="comp-tag tag-smb">SMB</span>
+        <span class="comp-tag tag-creatio">CRM</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>CRM-інтеграція + маркетингова автоматизація</li>
+          <li><span class="prop-key">Послуги</span>CRM-впровадження, маркетинг, телефонія, мессенджери</li>
+          <li><span class="prop-key">Акцент</span>Всі канали комунікації в одній системі</li>
+          <li><span class="prop-key">Продаж</span>Кейси, відгуки, безкоштовний аудит</li>
+        </ul>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">Develin Core</div>
+        <div class="comp-url">dc-website-mvp.webflow.io</div>
+        <span class="comp-tag tag-smb">Mid</span>
+        <span class="comp-tag tag-bpm">Automation</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Цифрова трансформація та автоматизація процесів</li>
+          <li><span class="prop-key">Послуги</span>BPM, CRM, інтеграції, workflow автоматизація</li>
+          <li><span class="prop-key">Акцент</span>Сучасний Webflow-сайт, чіткий UX</li>
+          <li><span class="prop-key">Продаж</span>Хороший UX сайту, хоча MVP-версія</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Сучасний дизайн</li><li>Чіткий UX/CTA</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>MVP, мало контенту</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">Netframe</div>
+        <div class="comp-url">netframe.org/uk</div>
+        <span class="comp-tag tag-bpm">BPM</span>
+        <span class="comp-tag tag-enterprise">Mid/Large</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Автоматизація HR, ERP та бізнес-процесів</li>
+          <li><span class="prop-key">Послуги</span>BPM, HR-автоматизація, електронний документообіг</li>
+          <li><span class="prop-key">Акцент</span>Внутрішні процеси, HR-рішення</li>
+          <li><span class="prop-key">Продаж</span>Консалтинговий підхід</li>
+        </ul>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">42flows.tech</div>
+        <div class="comp-url">42flows.tech</div>
+        <span class="comp-tag tag-bpm">Automation</span>
+        <span class="comp-tag tag-smb">SMB/Mid</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>No-code автоматизація бізнес-процесів та інтеграцій</li>
+          <li><span class="prop-key">Послуги</span>Автоматизація workflow, Make/Zapier/n8n інтеграції</li>
+          <li><span class="prop-key">Акцент</span>No-code підхід, швидке впровадження</li>
+          <li><span class="prop-key">Продаж</span>Сучасний сайт, чітке UX</li>
+        </ul>
+        <div class="sw-grid">
+          <div class="sw-block s"><h4>Сильні сторони</h4><ul><li>Сучасний підхід</li><li>Швидкість</li></ul></div>
+          <div class="sw-block w"><h4>Слабкі сторони</h4><ul><li>Не CRM-спеціаліст</li><li>Інші інструменти</li></ul></div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-name">Kytworks Systems</div>
+        <div class="comp-url">kitworks.systems</div>
+        <span class="comp-tag tag-ms">Microsoft</span>
+        <span class="comp-tag tag-enterprise">Mid/Enterprise</span>
+        <ul class="prop-list">
+          <li><span class="prop-key">Позиція</span>Microsoft-рішення для управління бізнесом та командами</li>
+          <li><span class="prop-key">Послуги</span>Microsoft 365, Teams, SharePoint, Power Platform</li>
+          <li><span class="prop-key">Акцент</span>Modern Work, collaboration, хмарні рішення</li>
+          <li><span class="prop-key">Продаж</span>Microsoft-бренд, сучасний сайт</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="tab-top5" class="tab-panel">
+    <p class="section-title">ТОП-5 найсильніших сайтів на ринку</p>
+    <div class="top5-grid">
+
+      <div class="top5-card" style="border: 2px solid var(--gold);">
+        <div class="top5-rank" style="color: var(--gold); opacity: 0.3;">1</div>
+        <div class="top5-name">SMART business</div>
+        <div class="comp-url" style="margin-bottom:8px">smart-it.com</div>
+        <div class="top5-why">Референсний рівень дизайну для українського IT-ринку. Сучасна типографіка, чіткі блоки рішень за галузями, сильний hero із value prop, кейси великих клієнтів, AI/cloud наратив.</div>
+        <div class="score-row"><span class="score-label">Дизайн</span><div class="score-track"><div class="score-fill" style="width:95%"></div></div></div>
+        <div class="score-row"><span class="score-label">Продажність</span><div class="score-track"><div class="score-fill gold" style="width:90%"></div></div></div>
+        <div class="score-row"><span class="score-label">Кейси/Proof</span><div class="score-track"><div class="score-fill mint" style="width:88%"></div></div></div>
+        <div class="score-row"><span class="score-label">UX/CTA</span><div class="score-track"><div class="score-fill" style="width:92%"></div></div></div>
+      </div>
+
+      <div class="top5-card">
+        <div class="top5-rank" style="opacity:0.15">2</div>
+        <div class="top5-name">Innoware</div>
+        <div class="comp-url" style="margin-bottom:8px">innoware.com</div>
+        <div class="top5-why">Чистий, корпоративний стиль. Сильний соціальний доказ (Kernel, Obolon, MetInvest). Наратив «міграція з рос. ПЗ» — актуально. 500+ проектів в 18 країнах.</div>
+        <div class="score-row"><span class="score-label">Дизайн</span><div class="score-track"><div class="score-fill" style="width:82%"></div></div></div>
+        <div class="score-row"><span class="score-label">Продажність</span><div class="score-track"><div class="score-fill gold" style="width:85%"></div></div></div>
+        <div class="score-row"><span class="score-label">Кейси/Proof</span><div class="score-track"><div class="score-fill mint" style="width:90%"></div></div></div>
+        <div class="score-row"><span class="score-label">UX/CTA</span><div class="score-track"><div class="score-fill" style="width:78%"></div></div></div>
+      </div>
+
+      <div class="top5-card">
+        <div class="top5-rank" style="opacity:0.15">3</div>
+        <div class="top5-name">Banza IT</div>
+        <div class="comp-url" style="margin-bottom:8px">banzait.com</div>
+        <div class="top5-why">Найсильніший серед Creatio-партнерів. Яскравий брендинг, AI-агенти, no-code наратив, галузеві кейси (Ukrtelecom 10 000 співробітників, Astana Motors 40 000 процесів/день).</div>
+        <div class="score-row"><span class="score-label">Дизайн</span><div class="score-track"><div class="score-fill" style="width:88%"></div></div></div>
+        <div class="score-row"><span class="score-label">Продажність</span><div class="score-track"><div class="score-fill gold" style="width:80%"></div></div></div>
+        <div class="score-row"><span class="score-label">Кейси/Proof</span><div class="score-track"><div class="score-fill mint" style="width:85%"></div></div></div>
+        <div class="score-row"><span class="score-label">UX/CTA</span><div class="score-track"><div class="score-fill" style="width:82%"></div></div></div>
+      </div>
+
+      <div class="top5-card">
+        <div class="top5-rank" style="opacity:0.15">4</div>
+        <div class="top5-name">QubeSoft</div>
+        <div class="comp-url" style="margin-bottom:8px">qube-soft.com</div>
+        <div class="top5-why">Найчіткіший сайт серед SMB Creatio-партнерів. Прозорий прайс, детальний опис послуг, кейси з конкретними результатами, унікальна послуга підбору CRM-менеджера.</div>
+        <div class="score-row"><span class="score-label">Дизайн</span><div class="score-track"><div class="score-fill" style="width:72%"></div></div></div>
+        <div class="score-row"><span class="score-label">Продажність</span><div class="score-track"><div class="score-fill gold" style="width:82%"></div></div></div>
+        <div class="score-row"><span class="score-label">Кейси/Proof</span><div class="score-track"><div class="score-fill mint" style="width:75%"></div></div></div>
+        <div class="score-row"><span class="score-label">UX/CTA</span><div class="score-track"><div class="score-fill" style="width:78%"></div></div></div>
+      </div>
+
+      <div class="top5-card">
+        <div class="top5-rank" style="opacity:0.15">5</div>
+        <div class="top5-name">Develin Core / 42flows</div>
+        <div class="comp-url" style="margin-bottom:8px">dc-website-mvp.webflow.io · 42flows.tech</div>
+        <div class="top5-why">Найсучасніший UX-підхід серед молодих гравців. Webflow-дизайн, чіткі CTA, сучасна типографіка. Слабкіші кейси, але краще перше враження.</div>
+        <div class="score-row"><span class="score-label">Дизайн</span><div class="score-track"><div class="score-fill" style="width:85%"></div></div></div>
+        <div class="score-row"><span class="score-label">Продажність</span><div class="score-track"><div class="score-fill gold" style="width:68%"></div></div></div>
+        <div class="score-row"><span class="score-label">Кейси/Proof</span><div class="score-track"><div class="score-fill mint" style="width:55%"></div></div></div>
+        <div class="score-row"><span class="score-label">UX/CTA</span><div class="score-track"><div class="score-fill" style="width:84%"></div></div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="tab-trends" class="tab-panel">
+    <p class="section-title">Тренди позиціонування та підходів на ринку</p>
+    <div class="trends-grid">
+
+      <div class="trend-card">
+        <div class="trend-icon"><i class="ti ti-brain" aria-hidden="true"></i></div>
+        <div class="trend-title">AI / no-code наратив</div>
+        <ul class="trend-items">
+          <li><span class="trend-pct">85%</span>Згадують AI або no-code</li>
+          <li><span class="trend-pct">60%</span>«Без програмування»</li>
+          <li><span class="trend-pct">40%</span>AI-агенти, чат-боти</li>
+          <li><span class="trend-pct">70%</span>Автоматизація рутини</li>
+        </ul>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-icon"><i class="ti ti-trophy" aria-hidden="true"></i></div>
+        <div class="trend-title">Соціальний доказ</div>
+        <ul class="trend-items">
+          <li><span class="trend-pct">100%</span>Відгуки клієнтів</li>
+          <li><span class="trend-pct">80%</span>К-сть проектів (300+)</li>
+          <li><span class="trend-pct">70%</span>Логотипи клієнтів</li>
+          <li><span class="trend-pct">60%</span>Certif. рівень Creatio</li>
+        </ul>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-icon"><i class="ti ti-building-factory-2" aria-hidden="true"></i></div>
+        <div class="trend-title">Галузева спеціалізація</div>
+        <ul class="trend-items">
+          <li><span class="trend-pct">75%</span>Фінанси/банки</li>
+          <li><span class="trend-pct">65%</span>FMCG/Ритейл</li>
+          <li><span class="trend-pct">55%</span>Виробництво</li>
+          <li><span class="trend-pct">45%</span>Телеком</li>
+        </ul>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-icon"><i class="ti ti-chart-line" aria-hidden="true"></i></div>
+        <div class="trend-title">Акцент на результатах</div>
+        <ul class="trend-items">
+          <li><span class="trend-pct">80%</span>ROI / бізнес-результати</li>
+          <li><span class="trend-pct">65%</span>% скорочення часу</li>
+          <li><span class="trend-pct">50%</span>Конкретні цифри в кейсах</li>
+          <li><span class="trend-pct">40%</span>Payback period</li>
+        </ul>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-icon"><i class="ti ti-layout" aria-hidden="true"></i></div>
+        <div class="trend-title">Блоки сайтів (топ)</div>
+        <ul class="trend-items">
+          <li><span class="trend-pct">100%</span>Hero з value prop + CTA</li>
+          <li><span class="trend-pct">95%</span>Лічильники / цифри</li>
+          <li><span class="trend-pct">90%</span>Послуги / рішення</li>
+          <li><span class="trend-pct">85%</span>Кейси клієнтів</li>
+          <li><span class="trend-pct">80%</span>Відгуки + логотипи</li>
+          <li><span class="trend-pct">75%</span>Команда / про нас</li>
+          <li><span class="trend-pct">65%</span>FAQ / процес роботи</li>
+        </ul>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-icon"><i class="ti ti-bolt" aria-hidden="true"></i></div>
+        <div class="trend-title">CTA підходи</div>
+        <ul class="trend-items">
+          <li><span class="trend-pct">90%</span>«Отримати консультацію»</li>
+          <li><span class="trend-pct">70%</span>«Залишити заявку»</li>
+          <li><span class="trend-pct">50%</span>«Безкоштовний аудит»</li>
+          <li><span class="trend-pct">40%</span>«Дивитись кейси»</li>
+          <li><span class="trend-pct">30%</span>Калькулятор / демо</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div style="background: var(--bg2); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-top: 1.5rem;">
+      <p style="font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 8px;">Що спільне у слабких сайтів ринку</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+        <div style="font-size: 13px; color: var(--sub); padding: 8px; background: var(--bg); border-radius: var(--border-radius-md);">Загальні фрази без конкретики («ми допоможемо вашому бізнесу»)</div>
+        <div style="font-size: 13px; color: var(--sub); padding: 8px; background: var(--bg); border-radius: var(--border-radius-md);">Відсутність цін або хоча б орієнтирів вартості</div>
+        <div style="font-size: 13px; color: var(--sub); padding: 8px; background: var(--bg); border-radius: var(--border-radius-md);">Застарілий дизайн 2018–2020 рр., не mobile-friendly</div>
+        <div style="font-size: 13px; color: var(--sub); padding: 8px; background: var(--bg); border-radius: var(--border-radius-md);">Кейси без результатів — лише опис того, що зробили</div>
+        <div style="font-size: 13px; color: var(--sub); padding: 8px; background: var(--bg); border-radius: var(--border-radius-md);">Один загальний CTA «Зв'яжіться з нами» без градації намірів</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-recs" class="tab-panel">
+    <p class="section-title">Рекомендації для нового сайту MasterCRM</p>
+    <div class="rec-list">
+
+      <div class="rec-card highlight">
+        <div class="rec-num">ПОЗИЦІОНУВАННЯ</div>
+        <div class="rec-title">«Creatio-інтегратор #1 для середнього бізнесу в Україні»</div>
+        <div class="rec-body">Banza тримає enterprise, QubeSoft і CRM HUB — малий бізнес. Середній бізнес (50–500 чол.) погано закритий. Позиціонуйтесь як експерти Creatio, що розуміють специфіку українського бізнесу та дають вимірюваний результат — не просто «налаштуємо CRM», а «збільшимо конверсію відділу продажів на 30%».</div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-num">ДИФЕРЕНЦІАЦІЯ</div>
+        <div class="rec-title">Гарантія результату + прозорість процесу</div>
+        <div class="rec-body">Жоден прямий конкурент не дає чіткої гарантії результату. MasterCRM може стати першим, хто публічно фіксує KPI ще до початку проекту. Додати: фіксований бюджет (ніяких сюрпризів), чіткий таймлайн, milestone-звітність.</div>
+      </div>
+
+      <div class="rec-card gold-border">
+        <div class="rec-num">АКЦЕНТ САЙТУ</div>
+        <div class="rec-title">Бізнес-результати, а не технологія</div>
+        <div class="rec-body">Не «Впроваджуємо Creatio», а «Ваш відділ продажів закриватиме на 40% більше угод». Клієнт купує результат, не систему. Кожен блок сайту — через призму: що зміниться у бізнесі клієнта після впровадження.</div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-num">СОЦІАЛЬНИЙ ДОКАЗ</div>
+        <div class="rec-title">Кейси з вимірюваними цифрами</div>
+        <div class="rec-body">Формат: Задача → Що зробили → Результат у цифрах. Наприклад: «Відділ продажів 12 чол. почав обробляти на 60% більше лідів без збільшення штату». Логотипи клієнтів на головній, відгуки відеоформатом — конвертують краще.</div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-num">LEAD GEN (UX Playbook)</div>
+        <div class="rec-title">CTA — конкретна обіцянка, не «зв'яжіться»</div>
+        <div class="rec-body">Замість «Залишити заявку» → «Отримати безкоштовний аудит вашого відділу продажів». Замість «Дізнатись більше» → «Побачити кейс вашої галузі». Поступовий commitment: спочатку — цінний матеріал (чек-ліст, аудит), потім — зустріч.</div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-num">ФОРМА / КОНВЕРСІЯ</div>
+        <div class="rec-title">Мінімум полів, максимум довіри</div>
+        <div class="rec-body">Перший крок: лише ім'я + телефон/email. Пояснити, що буде після відправки (дзвінок протягом 2 год., без тиску). Inline-валідація, одна колонка, кнопка — конкретна: «Отримати аудит безплатно». Форму розмістити above the fold.</div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-num">КОНТЕНТ-МАРКЕТИНГ</div>
+        <div class="rec-title">Блог як SEO + trust builder</div>
+        <div class="rec-body">CRM Genesis отримує трафік через блог. MasterCRM може перехопити позиції через: «Як вибрати CRM для [галузі]», «Creatio vs HubSpot для українського ринку», «Скільки коштує впровадження CRM». Цільові запити — купівельні наміри.</div>
+      </div>
+
+      <div class="rec-card highlight">
+        <div class="rec-num">ВИДІЛЯЄМОСЬ</div>
+        <div class="rec-title">Creatio Certified + Galuzeva expertise</div>
+        <div class="rec-body">Вказати офіційний рівень партнерства з Creatio. Обрати 2–3 галузі, де є реальні кейси, і стати в них референсним інтегратором. Більше — не краще: глибина спеціалізації б'є ширину охоплення у B2B продажах.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="tab-sitemap" class="tab-panel">
+    <p class="section-title">Орієнтовна структура сайту MasterCRM</p>
+    <div class="site-map">
+
+      <div class="page-block">
+        <div class="page-header" onclick="togglePage(this)">
+          <span class="page-badge badge-main">Головна</span>
+          <h3>Головна сторінка (Home)</h3>
+          <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto"></i>
+        </div>
+        <div class="page-body open">
+          <ul class="block-list">
+            <li class="block-item">
+              <div class="block-item-name">Hero — value prop</div>
+              <div class="block-item-desc">«Впроваджуємо Creatio — ваш відділ продажів закриватиме більше угод» + CTA «Отримати аудит»</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Лічильники довіри</div>
+              <div class="block-item-desc">N+ проектів · N+ клієнтів · Certified Creatio Partner · N років досвіду</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Проблема клієнта</div>
+              <div class="block-item-desc">«Впізнаєте себе?» — 4–5 болей: менеджери у Excel, дані розпорошені, угоди губляться</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Чому Creatio</div>
+              <div class="block-item-desc">Коротко: no-code, AI, масштабованість — без технічного жаргону</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Послуги (огляд)</div>
+              <div class="block-item-desc">4–6 карток: впровадження, інтеграції, підтримка, навчання, аудит, галузеві рішення</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Кейси (топ-3)</div>
+              <div class="block-item-desc">Результат у цифрах + галузь + логотип. «Дивитись усі кейси» →</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Відгуки клієнтів</div>
+              <div class="block-item-desc">3–5 відгуків, ім'я + посада + компанія, фото</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Процес роботи</div>
+              <div class="block-item-desc">5 кроків: Аудит → ТЗ → Налаштування → Навчання → Підтримка</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Логотипи клієнтів</div>
+              <div class="block-item-desc">Стрічка 10–15 логотипів. Формує довіру без зусиль.</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">CTA секція</div>
+              <div class="block-item-desc">«Отримайте безкоштовний аудит вашого відділу продажів» — форма 2 поля</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="page-block">
+        <div class="page-header" onclick="togglePage(this)">
+          <span class="page-badge badge-service">Послуги</span>
+          <h3>Сторінки послуг</h3>
+          <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto"></i>
+        </div>
+        <div class="page-body open">
+          <ul class="block-list">
+            <li class="block-item">
+              <div class="block-item-name">Впровадження Creatio</div>
+              <div class="block-item-desc">Головна послуга. Деталі: аналіз → ТЗ → конфігурація → запуск. Терміни та вартість.</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Аудит бізнес-процесів</div>
+              <div class="block-item-desc">Точка входу для «ще не вирішили». Безкоштовно або за символічну ціну.</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Інтеграції</div>
+              <div class="block-item-desc">Телефонія, 1С/BAS, сайт, Nova Poshta, месенджери, маркетплейси</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Підтримка та розвиток</div>
+              <div class="block-item-desc">SLA-рівні, час відповіді, пакети годин</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Навчання команди</div>
+              <div class="block-item-desc">Онбординг, тренінги, відеокурси, сертифікація</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Галузеві рішення</div>
+              <div class="block-item-desc">Готові конфігурації для ключових галузей — швидше і дешевше з нуля</div>
+            </li>
+          </ul>
+          <div style="font-size: 12px; color: var(--sub); margin-top: 10px; padding: 8px; background: var(--bg2); border-radius: var(--border-radius-md);">Кожна сторінка послуги: Hero → Що отримаєте → Процес → Терміни/Вартість (хоча б діапазон) → Кейси → FAQ → CTA</div>
+        </div>
+      </div>
+
+      <div class="page-block">
+        <div class="page-header" onclick="togglePage(this)">
+          <span class="page-badge badge-case">Кейси</span>
+          <h3>Сторінка кейсів + окремі кейси</h3>
+          <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto"></i>
+        </div>
+        <div class="page-body open">
+          <ul class="block-list">
+            <li class="block-item">
+              <div class="block-item-name">Список кейсів</div>
+              <div class="block-item-desc">Фільтр за галуззю / розміром компанії / послугою. Картки з ключовим результатом.</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Картка кейсу</div>
+              <div class="block-item-desc">Клієнт → Задача → Рішення → Результати в цифрах → Відгук → Наступний крок</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">«Схожий на ваш бізнес?»</div>
+              <div class="block-item-desc">CTA в кожному кейсі — перехід до консультації</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="page-block">
+        <div class="page-header" onclick="togglePage(this)">
+          <span class="page-badge badge-other">Додаткові</span>
+          <h3>Про нас · Блог · Контакти</h3>
+          <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto"></i>
+        </div>
+        <div class="page-body open">
+          <ul class="block-list">
+            <li class="block-item">
+              <div class="block-item-name">Про нас</div>
+              <div class="block-item-desc">Команда, рівень партнерства Creatio, місія, цінності, офіційні сертифікати</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Блог / Ресурси</div>
+              <div class="block-item-desc">SEO-статті, чек-листи, гайди. Орієнтир: 2 статті/міс мінімум</div>
+            </li>
+            <li class="block-item">
+              <div class="block-item-name">Контакти</div>
+              <div class="block-item-desc">Телефон + email + форма + месенджери. Чіткий call-to-action, карта якщо є офіс</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="page-block">
+        <div class="page-header" onclick="togglePage(this)">
+          <span class="page-badge badge-cta">CTA Логіка</span>
+          <h3>Логіка CTA та навігації</h3>
+          <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto"></i>
+        </div>
+        <div class="page-body open">
+          <div class="cta-logic">
+            <h4>Рівні залученості відвідувача та відповідний CTA</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="cta-step" style="background: #e6f1fb; border-color: #b5d4f4; color: #185fa5; min-width: 110px; text-align: center;">Холодний</div>
+                <div class="cta-arrow">→</div>
+                <div class="cta-step">«Дивитись кейси» · «Читати блог»</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="cta-step" style="background: #faeeda; border-color: #fac775; color: #854f0b; min-width: 110px; text-align: center;">Теплий</div>
+                <div class="cta-arrow">→</div>
+                <div class="cta-step">«Отримати безкоштовний аудит» · «Завантажити чек-ліст»</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="cta-step" style="background: #e1f5ee; border-color: #9fe1cb; color: #0f6e56; min-width: 110px; text-align: center;">Гарячий</div>
+                <div class="cta-arrow">→</div>
+                <div class="cta-step">«Записатись на демо» · «Розрахувати вартість»</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; font-size: 13px; color: var(--sub); background: var(--bg2); padding: 10px; border-radius: var(--border-radius-md);">
+            <strong style="color: var(--text);">Sticky header:</strong> лого + меню (Послуги / Кейси / Про нас / Блог) + кнопка «Отримати аудит» — завжди видима. На мобільному: burger menu + floating CTA кнопка знизу екрану.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+function togglePage(header) {
+  const body = header.nextElementSibling;
+  const icon = header.querySelector('i');
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+    body.style.display = 'none';
+    icon.style.transform = 'rotate(-90deg)';
+  } else {
+    body.classList.add('open');
+    body.style.display = '';
+    icon.style.transform = '';
+  }
+}
+</script>
