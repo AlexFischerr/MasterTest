@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кейси — MasterCRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:    #0e0e0e;
+  --ink2:   #3a3a3a;
+  --ink3:   #787878;
+  --paper:  #f7f4ef;
+  --white:  #ffffff;
+  --rule:   #e2ddd6;
+  --accent: #c8402a;
+  --accent2:#1a4a8a;
+  --gold:   #c9942a;
+  --mint:   #1a7a5e;
+  --tag-bg: #ede9e2;
+  --r: 6px;
+  --nav-h: 64px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--nav-h);
+  background: rgba(247,244,239,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center;
+  padding: 0 max(2rem, 5vw);
+  gap: 2rem;
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--ink); text-decoration: none;
+  letter-spacing: -0.02em;
+  margin-right: auto;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 1.5rem; list-style: none; }
+.nav-links a {
+  font-size: 14px; font-weight: 400; color: var(--ink2);
+  text-decoration: none; letter-spacing: 0.01em;
+  transition: color .2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--accent); }
+.nav-cta {
+  font-size: 13px; font-weight: 500;
+  background: var(--ink); color: var(--white);
+  padding: 8px 20px; border-radius: 40px;
+  text-decoration: none; letter-spacing: 0.02em;
+  transition: background .2s, transform .15s;
+  white-space: nowrap;
+}
+.nav-cta:hover { background: var(--accent); transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  padding: max(4rem, 8vw) max(2rem, 5vw) 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: end;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -80px;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,64,42,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 1rem;
+}
+.hero-eyebrow::before {
+  content: ''; width: 28px; height: 1px; background: var(--accent);
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 600; line-height: 1.1;
+  letter-spacing: -0.03em; color: var(--ink);
+}
+.hero-title em {
+  font-style: italic; color: var(--accent);
+}
+.hero-right { padding-bottom: 0.5rem; }
+.hero-desc {
+  font-size: 16px; color: var(--ink2); line-height: 1.7;
+  margin-bottom: 2rem; max-width: 440px;
+}
+.hero-stats {
+  display: flex; gap: 2rem; flex-wrap: wrap;
+}
+.stat-item {}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 600;
+  color: var(--ink); line-height: 1;
+}
+.stat-num span { color: var(--accent); }
+.stat-label {
+  font-size: 12px; color: var(--ink3);
+  letter-spacing: 0.04em; margin-top: 2px;
+}
+
+/* ── PLAYBOOK BANNER ── */
+.playbook-banner {
+  margin: 0 max(2rem, 5vw);
+  background: var(--ink);
+  border-radius: var(--r);
+  padding: 2rem 2.5rem;
+  display: flex; align-items: center; gap: 2.5rem;
+  flex-wrap: wrap;
+  position: relative; overflow: hidden;
+  animation: slideUp 0.6s ease 0.2s both;
+}
+.playbook-banner::after {
+  content: '';
+  position: absolute; right: -30px; top: -30px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(200,64,42,0.15);
+  pointer-events: none;
+}
+.pb-icon {
+  font-size: 36px; flex-shrink: 0;
+}
+.pb-text { flex: 1; min-width: 200px; }
+.pb-text h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--white); margin-bottom: 4px;
+}
+.pb-text p { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+.pb-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.pb-btn {
+  font-size: 13px; font-weight: 500;
+  padding: 10px 22px; border-radius: 40px;
+  text-decoration: none; letter-spacing: 0.02em;
+  transition: all .2s; cursor: pointer; border: none;
+  white-space: nowrap;
+}
+.pb-btn-primary {
+  background: var(--accent); color: var(--white);
+}
+.pb-btn-primary:hover { background: #a8321f; transform: translateY(-1px); }
+.pb-btn-secondary {
+  background: transparent; color: var(--white);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.pb-btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+/* ── FILTER BAR ── */
+.filter-section {
+  padding: 2rem max(2rem, 5vw) 1.5rem;
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+}
+.filter-label {
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink3); flex-shrink: 0;
+}
+.filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  font-size: 13px; font-weight: 400;
+  padding: 6px 16px; border-radius: 40px;
+  border: 1px solid var(--rule);
+  background: var(--white); color: var(--ink2);
+  cursor: pointer; transition: all .2s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--ink); color: var(--ink); }
+.chip.active {
+  background: var(--ink); color: var(--white);
+  border-color: var(--ink);
+}
+.filter-right { margin-left: auto; }
+.result-count {
+  font-size: 13px; color: var(--ink3);
+  display: flex; align-items: center; gap: 6px;
+}
+.count-badge {
+  background: var(--accent); color: var(--white);
+  font-size: 11px; font-weight: 500;
+  padding: 2px 8px; border-radius: 20px;
+}
+
+/* ── CASE GRID ── */
+.cases-grid {
+  padding: 0 max(2rem, 5vw) 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.case-card {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+  animation: fadeCard 0.5s ease both;
+}
+.case-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+  border-color: transparent;
+}
+.case-card.hidden { display: none; }
+
+/* card accent bar */
+.card-bar { height: 3px; width: 100%; }
+.bar-accent  { background: var(--accent); }
+.bar-accent2 { background: var(--accent2); }
+.bar-mint    { background: var(--mint); }
+.bar-gold    { background: var(--gold); }
+
+.card-head {
+  padding: 1.25rem 1.5rem 0;
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 10px;
+}
+.card-industry {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink3);
+}
+.card-result-badge {
+  font-size: 11px; font-weight: 500;
+  padding: 3px 10px; border-radius: 20px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.badge-red   { background: #fcecea; color: #962e1e; }
+.badge-blue  { background: #e6eef8; color: #1a3d7a; }
+.badge-green { background: #e4f3ee; color: #145e45; }
+.badge-gold  { background: #fdf3e3; color: #9a6e1a; }
+
+.card-body { padding: 0.75rem 1.5rem 1rem; flex: 1; }
+
+.card-problem {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink3); margin-bottom: 4px;
+  display: flex; align-items: center; gap: 6px;
+}
+.card-problem::before {
+  content: ''; width: 16px; height: 1px;
+  background: var(--rule); display: inline-block;
+}
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px; font-weight: 600;
+  line-height: 1.25; color: var(--ink);
+  margin-bottom: 10px; letter-spacing: -0.01em;
+}
+.card-desc {
+  font-size: 13.5px; color: var(--ink2);
+  line-height: 1.65; margin-bottom: 1rem;
+}
+
+.card-metrics {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0; border: 1px solid var(--rule);
+  border-radius: var(--r); overflow: hidden;
+  margin-bottom: 1rem;
+}
+.metric-item {
+  padding: 10px 12px; text-align: center;
+  border-right: 1px solid var(--rule);
+}
+.metric-item:last-child { border-right: none; }
+.metric-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--ink); line-height: 1;
+}
+.metric-label {
+  font-size: 10px; color: var(--ink3);
+  letter-spacing: 0.04em; margin-top: 2px;
+  line-height: 1.3;
+}
+
+.card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+.tag {
+  font-size: 11px; padding: 3px 10px;
+  background: var(--tag-bg); color: var(--ink2);
+  border-radius: 20px; letter-spacing: 0.02em;
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+}
+.card-client {
+  font-size: 12px; color: var(--ink3);
+  display: flex; align-items: center; gap: 6px;
+}
+.client-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; flex-shrink: 0;
+}
+.av-red   { background: #fcecea; color: #962e1e; }
+.av-blue  { background: #e6eef8; color: #1a3d7a; }
+.av-green { background: #e4f3ee; color: #145e45; }
+.av-gold  { background: #fdf3e3; color: #9a6e1a; }
+
+.card-cta {
+  font-size: 12px; font-weight: 500;
+  color: var(--ink); text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+  transition: color .2s, gap .2s;
+  white-space: nowrap;
+}
+.card-cta:hover { color: var(--accent); gap: 8px; }
+.card-cta svg { width: 14px; height: 14px; }
+
+/* ── FEATURED CASE (full-width) ── */
+.featured-case {
+  margin: 0 max(2rem, 5vw) 1.5rem;
+  background: var(--ink);
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  min-height: 320px;
+  animation: slideUp 0.5s ease 0.1s both;
+}
+.featured-left {
+  padding: 3rem;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+.feat-eyebrow {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.feat-eyebrow::before { content: '●'; font-size: 7px; }
+.feat-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 600; color: var(--white);
+  line-height: 1.2; letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.feat-desc {
+  font-size: 14px; color: rgba(255,255,255,0.6);
+  line-height: 1.7; margin-bottom: 1.5rem;
+}
+.feat-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+.feat-btn {
+  font-size: 13px; font-weight: 500;
+  padding: 10px 22px; border-radius: 40px;
+  text-decoration: none; cursor: pointer; border: none;
+  transition: all .2s; letter-spacing: 0.02em;
+}
+.feat-btn-primary { background: var(--accent); color: var(--white); }
+.feat-btn-primary:hover { background: #a8321f; transform: translateY(-1px); }
+.feat-btn-ghost {
+  background: transparent; color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.feat-btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+.featured-right {
+  padding: 2.5rem;
+  display: flex; flex-direction: column; justify-content: center;
+  background: rgba(255,255,255,0.04);
+  border-left: 1px solid rgba(255,255,255,0.08);
+  gap: 1.25rem;
+}
+.feat-metric-row { display: flex; flex-direction: column; gap: 4px; }
+.feat-metric-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 600; color: var(--white); line-height: 1;
+}
+.feat-metric-num span { color: var(--accent); }
+.feat-metric-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+.feat-divider { height: 1px; background: rgba(255,255,255,0.08); }
+.feat-quote {
+  font-size: 13px; color: rgba(255,255,255,0.55);
+  font-style: italic; line-height: 1.6;
+}
+.feat-quote-author { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+/* ── INLINE CTA BANNER ── */
+.inline-cta {
+  margin: 0 max(2rem, 5vw) 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 1.75rem 2rem;
+  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+}
+.inline-cta-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--accent); color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.inline-cta-text { flex: 1; min-width: 200px; }
+.inline-cta-text h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 600;
+  color: var(--ink); margin-bottom: 3px;
+}
+.inline-cta-text p { font-size: 13px; color: var(--ink3); }
+.inline-cta-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.icta-btn {
+  font-size: 13px; font-weight: 500; padding: 9px 20px;
+  border-radius: 40px; text-decoration: none;
+  cursor: pointer; border: none; transition: all .2s;
+  letter-spacing: 0.02em; white-space: nowrap;
+}
+.icta-primary { background: var(--ink); color: var(--white); }
+.icta-primary:hover { background: var(--accent); transform: translateY(-1px); }
+.icta-outline { background: transparent; color: var(--ink); border: 1px solid var(--rule); }
+.icta-outline:hover { border-color: var(--ink); }
+
+/* ── BOTTOM CTA STRIP ── */
+.bottom-cta {
+  margin: 2rem max(2rem, 5vw) 4rem;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.bottom-cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 24px,
+    rgba(0,0,0,0.012) 24px, rgba(0,0,0,0.012) 25px
+  );
+  pointer-events: none;
+}
+.bottom-cta h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 600; color: var(--ink);
+  letter-spacing: -0.02em; margin-bottom: 10px;
+  position: relative;
+}
+.bottom-cta h2 em { color: var(--accent); font-style: italic; }
+.bottom-cta p {
+  font-size: 15px; color: var(--ink3);
+  margin-bottom: 2rem; max-width: 480px;
+  margin-left: auto; margin-right: auto;
+  position: relative;
+}
+.bottom-cta-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; position: relative; }
+.bcta-btn {
+  font-size: 14px; font-weight: 500;
+  padding: 12px 28px; border-radius: 40px;
+  text-decoration: none; cursor: pointer; border: none;
+  transition: all .2s; letter-spacing: 0.02em;
+}
+.bcta-primary { background: var(--accent); color: var(--white); }
+.bcta-primary:hover { background: #a8321f; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,64,42,0.3); }
+.bcta-secondary { background: transparent; color: var(--ink); border: 1px solid var(--rule); }
+.bcta-secondary:hover { border-color: var(--ink); transform: translateY(-1px); }
+.bcta-tertiary { background: var(--ink); color: var(--white); }
+.bcta-tertiary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+/* ── ANIMATIONS ── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeCard {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.case-card:nth-child(1) { animation-delay: 0.05s; }
+.case-card:nth-child(2) { animation-delay: 0.10s; }
+.case-card:nth-child(3) { animation-delay: 0.15s; }
+.case-card:nth-child(4) { animation-delay: 0.20s; }
+.case-card:nth-child(5) { animation-delay: 0.25s; }
+.case-card:nth-child(6) { animation-delay: 0.30s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; gap: 2rem; }
+  .featured-case { grid-template-columns: 1fr; }
+  .featured-right { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+  nav { padding: 0 1.25rem; gap: 1rem; }
+  .nav-links { display: none; }
+  .cases-grid { grid-template-columns: 1fr; }
+  .card-metrics { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <a href="#" class="nav-logo">Master<span>CRM</span></a>
+  <ul class="nav-links">
+    
+    <li><a href="#">Головна</a></li>
+    <li><a href="#">Продукти</a></li>
+    <li><a href="#">Послуги</a></li>
+    <li><a href="#" class="active">Кейси</a></li>
+    <li><a href="#">Додаткові</a></li>
+    <li><a href="#">Контакти</a></li>
+  </ul>
+  <a href="#audit" class="nav-cta">Отримати аудит →</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Кейси клієнтів</div>
+    <h1 class="hero-title">
+      Реальні задачі.<br>
+      <em>Вимірювані</em><br>
+      результати.
+    </h1>
+  </div>
+  <div class="hero-right">
+    <p class="hero-desc">
+      Від логістики й продажів до сервісу та операцій: як компанії прискорюють роботу та отримують вимірюваний результат.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">87<span>+</span></div>
+        <div class="stat-label">Реалізованих проектів</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.2<span>×</span></div>
+        <div class="stat-label">Середній ROI</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">94<span>%</span></div>
+        <div class="stat-label">Повторних клієнтів</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PLAYBOOK CTA BANNER ── -->
+<div style="padding: 2rem max(2rem, 5vw) 0;">
+  <div class="playbook-banner">
+    <div class="pb-icon">🇺🇦</div>
+    <div class="pb-text">
+      <h3>Безкоштовний аудит вашого відділу продажів</h3>
+      <p>За 45 хвилин визначимо, де ваш бізнес втрачає угоди, та запропонуємо план автоматизації під Creatio.</p>
+    </div>
+    <div class="pb-actions">
+      <a href="#audit" class="pb-btn pb-btn-primary">Записатись на аудит</a>
+      <a href="#cases" class="pb-btn pb-btn-secondary">Переглянути кейси ↓</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── FEATURED CASE ── -->
+<div id="cases" style="padding: 2rem max(2rem, 5vw) 0;">
+  <div class="featured-case">
+    <div class="featured-left">
+      <div>
+        <div class="feat-eyebrow">Флагманський кейс · Виробництво</div>
+        <h2 class="feat-title">Як ORANTA централізувала customer operations в єдиній CRM-екосистемі за 3 місяці</h2>
+        <p class="feat-desc">
+          Компанія з 80 менеджерами вела угоди в Excel та WhatsApp. 
+          Після впровадження Creatio CRM час обробки заявки скоротився з 4 годин до 18 хвилин.
+        </p>
+      </div>
+      <div class="feat-ctas">
+        <a href="#" class="feat-btn feat-btn-primary">Переглянути кейс →</a>
+        <a href="#audit" class="feat-btn feat-btn-ghost">Оцінити ваш процес</a>
+      </div>
+    </div>
+    <div class="featured-right">
+      <div class="feat-metric-row">
+        <div class="feat-metric-num">11+ <span>процесів</span></div>
+        <div class="feat-metric-label">Автоматизовано в CRM</div>
+      </div>
+      <div class="feat-divider"></div>
+      <div class="feat-metric-row">
+        <div class="feat-metric-num">Єдина customer history<span></span></div>
+        <div class="feat-metric-label">Для всіх каналів</div>
+      </div>
+      <div class="feat-divider"></div>
+      <div class="feat-metric-row">
+        <div class="feat-metric-num">360°<span> customer view </span></div>
+        <div class="feat-metric-label">Історія договорів і взаємодій</div>
+      </div>
+      <div class="feat-divider"></div>
+      <div class="feat-quote">
+        «Ми отримали єдине середовище для роботи з клієнтами, договорами та сервісними процесами замість десятків розрізнених сценаріїв.»
+        <div class="feat-quote-author">— Олег Савченко, комерційний директор</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FILTER BAR ── -->
+<div class="filter-section">
+  <span class="filter-label">Галузь</span>
+  <div class="filter-chips">
+    <button class="chip active" data-filter="all">Усі кейси</button>
+    <button class="chip" data-filter="production">Автомотив</button>
+    <button class="chip" data-filter="retail">Ритейл</button>
+    <button class="chip" data-filter="finance">Фінанси</button>
+    <button class="chip" data-filter="fmcg">BIO</button>
+    <button class="chip" data-filter="services">Послуги</button>
+    <button class="chip" data-filter="realestate">Нерухомість</button>
+  </div>
+  <div class="filter-right">
+    <div class="result-count">
+      Показано <span class="count-badge" id="count">6</span> кейсів
+    </div>
+  </div>
+</div>
+
+<!-- ── CASES GRID ── -->
+<div class="cases-grid" id="casesGrid">
+
+  <!-- CARD 1 -->
+  <article class="case-card" data-industry="retail">
+    <div class="card-bar bar-accent"></div>
+    <div class="card-head">
+      <div class="card-industry">Ритейл · Мережа магазинів</div>
+      <div class="card-result-badge badge-red">+41% продажів</div>
+    </div>
+    <div class="card-body">
+      <div class="card-problem">Задача</div>
+      <h2 class="card-title">CRM замість 12 таблиць Excel для мережі з 34 точками</h2>
+      <p class="card-desc">
+        Менеджери не бачили повної картини клієнта — замовлення в одному файлі, 
+        скарги в іншому, контакти в третьому. Впровадили єдину CRM з автоматичним 
+        призначенням задач та омніканальними комунікаціями.
+      </p>
+      <div class="card-metrics">
+        <div class="metric-item">
+          <div class="metric-num">+41%</div>
+          <div class="metric-label">Повторних покупок</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">−60%</div>
+          <div class="metric-label">Час на звітність</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">6 міс.</div>
+          <div class="metric-label">Окупність</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Creatio CRM</span>
+        <span class="tag">Омніканал</span>
+        <span class="tag">Автозадачі</span>
+        <span class="tag">1С інтеграція</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-client">
+        <div class="client-avatar av-red">МС</div>
+        <span>Мережа «Стиль», Київ</span>
+      </div>
+      <a href="#" class="card-cta">
+        Детальніше
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- CARD 2 -->
+  <article class="case-card" data-industry="finance">
+    <div class="card-bar bar-accent2"></div>
+    <div class="card-head">
+      <div class="card-industry">Фінанси · лізинг</div>
+      <div class="card-result-badge badge-blue">Bitrix24 → Creatio</div>
+    </div>
+    <div class="card-body">
+      <div class="card-problem">Задача</div>
+      <h2 class="card-title">ULF замінила Bitrix24 та автоматизувала продажі й контакт-центр в єдиній CRM-системі</h2>
+      <p class="card-desc">
+        Після переходу на Creatio компанія централізувала продажі, обробку лідів та роботу контакт-центру.
+      </p>
+      <div class="card-metrics">
+        <div class="metric-item">
+          <div class="metric-num">−72%</div>
+          <div class="metric-label">Час обробки</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">+28%</div>
+          <div class="metric-label">NPS клієнтів</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">4 міс.</div>
+          <div class="metric-label">Окупність</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Creatio BPM</span>
+        <span class="tag">Service Desk</span>
+        <span class="tag">Telephony API</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-client">
+        <div class="client-avatar av-blue">ULF</div>
+        <span>УЛФ-ФІНАНС</span>
+      </div>
+      <a href="#" class="card-cta">
+        Детальніше
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- CARD 3 -->
+  <article class="case-card" data-industry="fmcg">
+    <div class="card-bar bar-gold"></div>
+    <div class="card-head">
+      <div class="card-industry">Агро · BIOTECH КОМПАНІЯ</div>
+      <div class="card-result-badge badge-gold">Sales ecosystem</div>
+    </div>
+    <div class="card-body">
+      <div class="card-problem">Задача</div>
+      <h2 class="card-title">BTU-Center централізувала продажі, замовлення та маркетинг в єдиній CRM-екосистемі</h2>
+      <p class="card-desc">
+        Компанія працювала з великою кількістю розрізнених процесів: продажі, замовлення, маркетинг, програми лояльності та клієнтські звернення. На базі Creatio побудували єдину систему для управління customer journey, аналітикою та комерційними процесами.
+      </p>
+      <div class="card-metrics">
+        <div class="metric-item">
+          <div class="metric-num">360° customer view</div>
+          <div class="metric-label">Єдина база клієнтів</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">Loyalty automation</div>
+          <div class="metric-label">Прозора логіка бонусів</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">1C integration</div>
+          <div class="metric-label">Синхронізація системи</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Creatio Sales</span>
+        <span class="tag">Creatio Marketing</span>
+        <span class="tag">Communication Pannel</span>
+        <span class="tag">KPI Dashboard</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-client">
+        <div class="client-avatar av-gold">BTU</div>
+        <span>BTU-Center, Київ</span>
+      </div>
+      <a href="#" class="card-cta">
+        Детальніше
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- INLINE CTA (grid-spanning) -->
+  <div style="grid-column: 1 / -1;">
+    <div class="inline-cta">
+      <div class="inline-cta-icon">🎯</div>
+      <div class="inline-cta-text">
+        <h4>Впізнаєте свій бізнес в одному з кейсів?</h4>
+        <p>Розкажіть нам про вашу ситуацію — підготуємо план під ваші процеси безплатно.</p>
+      </div>
+      <div class="inline-cta-btns">
+        <a href="#audit" class="icta-btn icta-primary">Отримати план автоматизації</a>
+        <a href="#" class="icta-btn icta-outline">Завантажити чек-ліст</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 -->
+  <article class="case-card" data-industry="services">
+    <div class="card-bar bar-mint"></div>
+    <div class="card-head">
+      <div class="card-industry">DEFENSE TECH · ВИРОБНИЦТВО</div>
+      <div class="card-result-badge badge-green">Unified operations</div>
+    </div>
+    <div class="card-body">
+      <div class="card-problem">Задача</div>
+      <h2 class="card-title">Kvertus побудувала наскрізний процес — від ліда до відвантаження продукції</h2>
+      <p class="card-desc">
+         Презупенити дубльовані данні і втрачениї лідів через розрізненність систем продажів. На базі Creatio було побудувано платформу для управління замовленнями, договорами, виробництвом та сервісним обслуговуванням.
+      </p>
+      <div class="card-metrics">
+        <div class="metric-item">
+          <div class="metric-num">Unified operations</div>
+          <div class="metric-label">Продажі + виробництво</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">Workflow automation</div>
+          <div class="metric-label">КП та договори</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">Management analytics</div>
+          <div class="metric-label">Drag-drop дашборди</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Creatio CRM</span>
+        <span class="tag">Production Management</span>
+        <span class="tag">Client satisfaction</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-client">
+        <div class="client-avatar av-green">KV</div>
+        <span>Kvertus, Київ</span>
+      </div>
+      <a href="#" class="card-cta">
+        Детальніше
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- CARD 5 -->
+  <article class="case-card" data-industry="realestate">
+    <div class="card-bar bar-accent2"></div>
+    <div class="card-head">
+      <div class="card-industry">Нерухомість · Девелопер</div>
+      <div class="card-result-badge badge-blue">+47% конверсія</div>
+    </div>
+    <div class="card-body">
+      <div class="card-problem">Задача</div>
+      <h2 class="card-title">Забудовник перестав губити ліди з реклами — конверсія зросла вдвічі</h2>
+      <p class="card-desc">
+        Ліди з Facebook та Google потрапляли в різні джерела і часто губились. 
+        Налаштували автоматичний збір лідів, скоринг та розподіл між менеджерами 
+        за 30 секунд після заявки.
+      </p>
+      <div class="card-metrics">
+        <div class="metric-item">
+          <div class="metric-num">+47%</div>
+          <div class="metric-label">Конверсія лідів</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">30 сек.</div>
+          <div class="metric-label">Реакція на лід</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">3 міс.</div>
+          <div class="metric-label">Окупність</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Lead Scoring</span>
+        <span class="tag">Facebook Ads API</span>
+        <span class="tag">Auto-routing</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-client">
+        <div class="client-avatar av-blue">БГ</div>
+        <span>БудГруп, Дніпро</span>
+      </div>
+      <a href="#" class="card-cta">
+        Детальніше
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- CARD 6 -->
+  <article class="case-card" data-industry="production">
+    <div class="card-bar bar-accent"></div>
+    <div class="card-head">
+      <div class="card-industry">Виробництво · Машинобудування</div>
+      <div class="card-result-badge badge-red">ROI 4.8×</div>
+    </div>
+    <div class="card-body">
+      <div class="card-problem">Задача</div>
+      <h2 class="card-title">Машинобудівний завод автоматизував сервісний відділ на 320 техніків</h2>
+      <p class="card-desc">
+        Заявки на сервіс приймались по телефону, технік дізнавався про виклик 
+        за годину-дві. Впровадили Service Desk + мобільний додаток — технік 
+        отримує задачу за 2 хвилини з усіма деталями обладнання.
+      </p>
+      <div class="card-metrics">
+        <div class="metric-item">
+          <div class="metric-num">4.8×</div>
+          <div class="metric-label">ROI за рік</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">−65%</div>
+          <div class="metric-label">Час реакції</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-num">+22%</div>
+          <div class="metric-label">CSat клієнтів</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Service Desk</span>
+        <span class="tag">Field Service</span>
+        <span class="tag">Creatio Mobile</span>
+        <span class="tag">IoT інтеграція</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-client">
+        <div class="client-avatar av-red">УМ</div>
+        <span>УкрМаш, Запоріжжя</span>
+      </div>
+      <a href="#" class="card-cta">
+        Детальніше
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </article>
+
+</div>
+
+<!-- ── BOTTOM CTA STRIP ── -->
+<div id="audit" style="padding: 0 max(2rem,5vw);">
+  <div class="bottom-cta">
+    <h2>Оцінимо, <em>де ваш бізнес втрачає швидкість, контроль і дані</em></h2>
+    <p>Запишіться на безкоштовний 45-хвилинний аудит — проаналізуємо ваші процеси та покажемо, де автоматизація може прибрати ручну роботу, прискорити операції й покращити контроль.</p>
+    <div class="bottom-cta-btns">
+      <a href="#" class="bcta-btn bcta-primary">Провести оцінку процесів</a>
+      <a href="#" class="bcta-btn bcta-tertiary">Подивитись можливості Creatio</a>
+      <a href="#" class="bcta-btn bcta-secondary">Переглянути більше кейсів</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer style="padding: 2rem max(2rem,5vw); border-top: 1px solid var(--rule); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+  <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:600; color:var(--ink);">
+    Master<span style="color:var(--accent)">CRM</span>
+    <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:400; color:var(--ink3); margin-left:12px;">Офіційний партнер Creatio</span>
+  </div>
+  <div style="font-size:13px; color:var(--ink3);">© 2025 MasterCRM · Всі права захищені</div>
+</footer>
+
+<script>
+const chips = document.querySelectorAll('.chip');
+const cards = document.querySelectorAll('.case-card');
+const countEl = document.getElementById('count');
+
+chips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const filter = chip.dataset.filter;
+    let visible = 0;
+    cards.forEach(card => {
+      const match = filter === 'all' || card.dataset.industry === filter;
+      card.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+    countEl.textContent = visible;
+  });
+});
+</script>
+</body>
+</html>
